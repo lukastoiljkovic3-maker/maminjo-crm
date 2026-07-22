@@ -2111,9 +2111,9 @@ const TAGS_QUAL   = ['qualified','mid-priority','high priority','maminjo-qualifi
 const TAGS_DQ     = ['disqualified','low-priority','maminjo-disqualified'];
 const TAGS_BOOKED = ['booked-call'];
 const TAGS_CUST   = ['customer'];
-const TAGS_OPTIN  = ['24_07_2026_webinar_optin','maminjo-webinar-optin'];
+const TAGS_OPTIN  = ['maminjo-webinar-optin'];
 const TAGS_PIPELINE = [...TAGS_OPTIN,...TAGS_QUAL,...TAGS_DQ,...TAGS_BOOKED,...TAGS_CUST];
-const isOptinTag = t => String(t).startsWith('webinar_') || t === 'maminjo-new-optin';
+const isOptinTag = t => String(t).startsWith('webinar_') || String(t).endsWith('_webinar_optin') || TAGS_OPTIN.includes(t);
 
 function leadTypeFromTags(tags){
   tags = tags || [];

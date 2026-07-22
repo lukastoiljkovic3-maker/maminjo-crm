@@ -31,11 +31,33 @@ export default async function handler(req, res) {
     if (!r.ok) return res.status(502).json({ error: `bookings query failed (${r.status})` });
     const rows = await r.json();
 
+    /* Match bookings to tracker leads by email (then phone digits) so the
+       Kalendar cards open the full lead profile like GHL appointments do. */
+    const byEmail = new Map(), byPhone = new Map();
+    if (rows.length) {
+      const lr = await fetch(
+        `${SUPABASE_URL}/rest/v1/ghl_leads?select=id,email,phone&limit=5000`,
+        { headers: { apikey: KEY, Authorization: `Bearer ${KEY}` } },
+      );
+      if (lr.ok) {
+        for (const l of await lr.json()) {
+          if (l.email) byEmail.set(String(l.email).toLowerCase(), l.id);
+          const digits = String(l.phone || '').replace(/\D/g, '');
+          if (digits.length >= 8) byPhone.set(digits.slice(-9), l.id);
+        }
+      }
+    }
+    const matchLead = b => {
+      const em = byEmail.get(String(b.email || '').toLowerCase());
+      if (em) return em;
+      const digits = String(b.telefon || '').replace(/\D/g, '');
+      return digits.length >= 8 ? (byPhone.get(digits.slice(-9)) || null) : null;
+    };
+
     let events = rows.map(b => ({
       id: b.id,
       title: `${b.ime}${b.prezime ? ' ' + b.prezime : ''} · ${b.telefon}`,
-      // No GHL contactId for native bookings; the sync may later match by email.
-      contactId: null,
+      contactId: matchLead(b),
       startTime: b.starts_at,
       endTime: new Date(new Date(b.starts_at).getTime() + (b.duration_min || 30) * 60000).toISOString(),
       appointmentStatus: STATUS_MAP[b.status] || 'confirmed',
