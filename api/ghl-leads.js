@@ -37,12 +37,12 @@ export default async function handler(req, res) {
     // CjureFX webinar funnel buckets — the REAL tags the GHL workflows apply
     // (verified against the location 2026-07-05). Every registrant carries a
     // dated `webinar_*` tag; qualifier outcome = kvalifikovan / value tiers vs dq/low-value.
-    const QUAL   = ['kvalifikovan', 'starter-value', 'mid-value', 'high-value', 'cjure-qualified'];
-    const DQ     = ['dq', 'low-value', 'cjure-disqualified'];
+    const QUAL   = ['qualified', 'mid-priority', 'high priority', 'kvalifikovan'];
+    const DQ     = ['disqualified', 'low-priority', 'dq'];
     const BOOKED = ['booked-call'];
     const CUST   = ['customer'];
     const hasTag = (c, tags) => (c.tags || []).some(t => tags.includes(t));
-    const isOptin = (c) => (c.tags || []).some(t => String(t).startsWith('webinar_') || t === 'cjure-new-optin');
+    const isOptin = (c) => (c.tags || []).some(t => String(t).startsWith('webinar_') || String(t).endsWith('_webinar_optin') || t.endsWith('_webinar_optin'));
 
     const customer     = all.filter(c => hasTag(c, CUST));
     const booked       = all.filter(c => hasTag(c, BOOKED) && !hasTag(c, CUST));

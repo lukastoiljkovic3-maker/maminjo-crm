@@ -53,8 +53,8 @@ export default async function handler(req, res) {
     const sinceIso = start.toISOString();
 
     const [optins, qualified, booked, oppsJson] = await Promise.all([
-      countContactsByTag('cjure-new-optin', sinceIso),
-      countContactsByTag('cjure-qualified', sinceIso),
+      countContactsByTag('24_07_2026_webinar_optin', sinceIso),
+      countContactsByTag('qualified', sinceIso),
       countContactsByTag('booked-call', sinceIso),
       ghl('/opportunities/search', { location_id: GHL_LOC, limit: 100 }),
     ]);
