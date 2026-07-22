@@ -2072,7 +2072,11 @@ const sb = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 const GHL_TOKEN = '';
 const GHL_LOC   = 'RKrapXXixFmKO2AnWe0B';
 // MAMINJO location custom-field IDs (fetched from GHL 2026-07-05).
-const GHL_CF    = {}; // TODO: Maminjo custom-field IDs (fetch from GHL once token is set)
+const GHL_CF    = {
+  'O5gksdGQWnr4lgSkJXkM': 'iskustvo',
+  'H7wsutCyTNqlNf9FCQwS': 'cilj',
+  'ZCsOZSHfOGtTGiSxiRzS': 'kapital'
+};
 let leadsFilter  = 'all';
 let leadsSubTab  = 'all';   // 'all' | 'optin' | 'qualified' | 'disqualified' | 'booked' | 'customer'
 let leadsView    = 'list'; // 'list' | 'ads'
@@ -2086,11 +2090,11 @@ if (DEEP_LEAD_ID) { try { localStorage.setItem('maminjo_deeplink', JSON.stringif
    Every webinar registrant gets a dated `webinar_*` tag (prefix-matched in JS;
    Supabase overlaps() can't prefix-match, so list current webinar tags in
    TAGS_OPTIN explicitly — add each new webinar's tag here). ── */
-const TAGS_QUAL   = ['maminjo-qualified','kvalifikovan','starter-value','mid-value','high-value'];
-const TAGS_DQ     = ['maminjo-disqualified','dq','low-value'];
+const TAGS_QUAL   = ['qualified','mid-priority','high priority','maminjo-qualified'];
+const TAGS_DQ     = ['disqualified','low-priority','maminjo-disqualified'];
 const TAGS_BOOKED = ['booked-call'];
 const TAGS_CUST   = ['customer'];
-const TAGS_OPTIN  = ['maminjo-webinar-optin'];
+const TAGS_OPTIN  = ['24_07_2026_webinar_optin','maminjo-webinar-optin'];
 const TAGS_PIPELINE = [...TAGS_OPTIN,...TAGS_QUAL,...TAGS_DQ,...TAGS_BOOKED,...TAGS_CUST];
 const isOptinTag = t => String(t).startsWith('webinar_') || t === 'maminjo-new-optin';
 
