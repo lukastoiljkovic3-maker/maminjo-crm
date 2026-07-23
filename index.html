@@ -2092,7 +2092,11 @@ const GHL_LOC   = 'RKrapXXixFmKO2AnWe0B';
 const GHL_CF    = {
   'O5gksdGQWnr4lgSkJXkM': 'iskustvo',
   'H7wsutCyTNqlNf9FCQwS': 'cilj',
-  'ZCsOZSHfOGtTGiSxiRzS': 'kapital'
+  'ZCsOZSHfOGtTGiSxiRzS': 'kapital',
+  'lPB2CBRqrGNpOZDyNTQQ': 'utm_source',
+  'eaXL9FViLEySjlEf7l7k': 'utm_campaign',
+  'MOa6TeNM2N3kHHWTyQRY': 'utm_medium',
+  'IBP7xlstGSxihNGaOzla': 'utm_content'
 };
 let leadsFilter  = 'all';
 let leadsSubTab  = 'all';   // 'all' | 'optin' | 'qualified' | 'disqualified' | 'booked' | 'customer'
@@ -3978,6 +3982,10 @@ async function loadLeadCounts(){
   return{all:allR.count||0,optin:oR.count||0,qualified:qR.count||0,disqualified:dqR.count||0,booked:bR.count||0,customer:cR.count||0};
 }
 
+function _realAttr(c, key){
+  const attrs=(c.attributions||[]).filter(a=>String(a.medium||'').toLowerCase()!=='manual');
+  return (attrs.find(a=>a.isFirst)||attrs[0]||{})[key]||null;
+}
 function mapContact(c, lead_type){
   const cf={};
   (c.customFields||[]).forEach(f=>{if(GHL_CF[f.id])cf[GHL_CF[f.id]]=f.value;});
@@ -3991,10 +3999,10 @@ function mapContact(c, lead_type){
     time_frame:cf.time_frame||null, qualification:cf.qualification||null,
     date_added:c.dateAdded||new Date().toISOString(),
     synced_at:new Date().toISOString(),
-    utm_source:(c.attributions||[]).find(a=>a.isFirst)?.utmSource||(c.attributions||[])[0]?.utmSource||null,
-    utm_medium:(c.attributions||[]).find(a=>a.isFirst)?.utmMedium||(c.attributions||[])[0]?.utmMedium||null,
-    utm_campaign:(c.attributions||[]).find(a=>a.isFirst)?.utmCampaign||(c.attributions||[])[0]?.utmCampaign||null,
-    utm_content:(c.attributions||[]).find(a=>a.isFirst)?.utmContent||(c.attributions||[])[0]?.utmContent||null,
+    utm_source:cf.utm_source||_realAttr(c,'utmSource'),
+    utm_medium:cf.utm_medium||_realAttr(c,'utmMedium'),
+    utm_campaign:cf.utm_campaign||_realAttr(c,'utmCampaign'),
+    utm_content:cf.utm_content||_realAttr(c,'utmContent'),
   };
 }
 
