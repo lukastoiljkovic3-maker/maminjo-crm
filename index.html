@@ -2142,8 +2142,7 @@ let selectedLeadIds = new Set();  // Currently checked leads for bulk actions
 /* The two closers. DB values stay closer1/closer2 (schema check constraint) —
    only the display name/initial live here. Rename a closer = edit this map. */
 const CLOSERS = {
-  closer1: { name: 'Luka',      initial: 'L' },
-  closer2: { name: 'Dimitrije', initial: 'D' },
+  closer1: { name: 'Mateja', initial: 'M' },
 };
 const CLOSER_KEYS = Object.keys(CLOSERS);
 const closerName = k => (CLOSERS[k] || {}).name || '';
@@ -2607,7 +2606,7 @@ function renderHeroStats(appts, closedLeads, host){
   countUpEls(host);
 }
 
-/* Closer board (Luka / Dimitrije): Booked / Won / Lost / No-show.
+/* Closer board (Mateja): Booked / Won / Lost / No-show.
    Booked/Lost/No-show come from GHL calendar appointment statuses; Won = tracker
    Closed leads with their entered close value (deal_value). */
 function renderClosersBoard(appts, closedLeads, host){
@@ -2960,7 +2959,7 @@ async function renderCommissionSection(){
     return{total,byDeal,count:memberDeals.length};
   };
 
-  const cM=calcComm('closer1'), cD=calcComm('closer2');
+  const cM=calcComm('closer1');
 
   const dealRows=(byDeal)=>Object.entries(byDeal).map(([key,cnt])=>{
     const d=DEALS[key];
@@ -2986,7 +2985,6 @@ async function renderCommissionSection(){
     <div class="metrics-sec-lbl">PROVIZIJA — Svi Zatvoreni Dealovi</div>
     <div class="comm-grid">
       ${commCell(closerName('closer1'),'closer1',cM,'var(--closer1)')}
-      ${commCell(closerName('closer2'),'closer2',cD,'var(--closer2)')}
     </div>
   </div>`;
 }
